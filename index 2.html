@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b3c">
+<title>Kinetic Equation Explorer v5.2 · Magnetic Mirror, Waves &amp; BGK | Marco Gobbin</title>
+<style>
+:root{--navy:#101b3c;--cobalt:#3c57d4;--ink:#1b2b4a;--muted:#62738f;--edge:#dce5f3;--bg:#eef3fa;--white:#fff;--teal:#078d89;--orange:#ca7020}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(115deg,#101b3c,#1d326c);color:white;padding:21px max(20px,calc((100vw - 1480px)/2));display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.probe-box{margin-top:12px;padding:11px 13px;background:#f5f8fe;border:1px solid #dfe8f9;border-radius:9px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}.probe-box .probe-data{font-size:12px;color:#445b83}.probe-box strong{font-size:19px;color:#233e8a;font-variant-numeric:tabular-nums}.probe-box small{color:#7789a1;font-size:11px}.moment-formula{font-family:"Cambria Math","Times New Roman",serif;font-size:16px;color:#294b99;margin-top:8px;line-height:1.45}.moment-warning{color:#815f27;font-size:10.5px;margin-top:6px;line-height:1.45}.probe-box .probe-data>div{margin-bottom:3px}header h1{margin:0 0 5px;font-size:24px;letter-spacing:-.55px}header p{margin:0;font-size:12px;color:#cbd5f3}header .credit{margin-top:7px;color:white;font-size:12px;font-weight:700;letter-spacing:.12px}header .context{border:1px solid #7386bc;background:#ffffff13;padding:8px 11px;border-radius:8px;font-size:11px;color:#d9e4ff;max-width:235px}
+.shell{max-width:1520px;margin:auto;padding:18px;display:grid;grid-template-columns:285px minmax(0,1fr);gap:16px;align-items:start}.sidebar,.panel{background:#fff;border:1px solid var(--edge);border-radius:13px;box-shadow:0 3px 20px #183b7c0c}.sidebar{padding:17px 16px}.panel{padding:17px 19px}.main{display:flex;flex-direction:column;gap:14px;min-width:0}.sidebar h2,.panel h2{font-size:16px;margin:0}.intro{font-size:12px;line-height:1.65;color:#5a6e8e;margin:7px 0 0}.group{border-top:1px solid #e5ebf5;padding:14px 0 2px;margin-top:14px}.group h3{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#71829f;margin:0 0 12px}.control{margin:0 0 14px}.control label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.control .namevalue{display:flex;justify-content:space-between;gap:8px;align-items:center}.control .readout{font-size:11px;color:#2f48a4;font-weight:750;font-variant-numeric:tabular-nums}.control select{width:100%;border:1px solid #cfd9e9;background:#f9fbff;color:#243557;padding:10px;border-radius:8px;font-size:12px}.control input[type=range]{display:block;width:100%;accent-color:var(--cobalt);margin:8px 0 2px}.control .desc{font-size:10.5px;color:#7a89a0;line-height:1.35}.checkboxline{display:flex;align-items:center;gap:8px;color:#354d73;font-size:12px;margin:10px 0}.checkboxline input{accent-color:var(--cobalt)}.hidden{display:none!important}
+.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{font:inherit;font-size:12px;font-weight:750;cursor:pointer;padding:9px 13px;border-radius:8px;border:1px solid #ccd7ea;background:#f9fbff;color:#273d65}.btn.primary{background:var(--cobalt);color:white;border-color:var(--cobalt)}.btn:focus-visible,.control select:focus-visible{outline:2px solid #8b9fff;outline-offset:2px}.btn:hover{filter:brightness(.96)}
+.plot-head{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px}.pill{background:#edf4ff;color:#2f4c9e;border:1px solid #d2e0f8;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:800}.canvas-wrap{border:1px solid #e0e7f2;background:#fafcff;border-radius:10px;padding:6px}.canvas-wrap canvas{display:block;width:100%;height:auto;max-width:100%}.caption{font-size:11px;line-height:1.65;color:#657793;margin-top:9px}.caption b{color:#2f4391}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:13px 0 0}.metric{border:1px solid #dfe7f4;background:#fbfcff;padding:11px 12px;border-radius:9px}.metric label{font-size:10px;color:#6b7b96;display:block;min-height:24px}.metric strong{font-size:20px;color:#233b72;font-weight:760;font-variant-numeric:tabular-nums;display:block;margin:5px 0}.metric small{font-size:10px;color:#7789a1}
+.bottom-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}.formula{margin:10px 0 0;background:#f7f9ff;border:1px solid #e1e9f8;border-radius:9px;padding:13px 14px;color:#293e71;font-size:14px;line-height:1.8;overflow-wrap:anywhere}.mathline{font-family:"Cambria Math","Times New Roman",serif;font-size:17px;letter-spacing:.1px}.mathline.small{font-size:15px}.formula .line{padding:3px 0}.formula .line b{color:#2446b7}.form-steps{display:grid;gap:9px;margin-top:13px}.step{display:grid;grid-template-columns:25px minmax(0,1fr);align-items:start;gap:8px;font-size:12px;line-height:1.6;color:#4d6285}.step .no{width:22px;height:22px;background:#edf2fd;color:#3a50a5;border-radius:50%;font-size:11px;font-weight:800;display:grid;place-items:center}.keypoint{margin-top:11px;padding:10px 12px;border-left:3px solid #4862d6;background:#f5f8ff;font-size:11.5px;line-height:1.6;color:#395175}.keypoint b{color:#203f9a}.note{background:#fffaf0;border:1px solid #eee0c4;padding:11px;border-radius:8px;color:#755d37;font-size:11px;line-height:1.6;margin-top:12px}
+footer{font-size:11px;color:#8290a7;text-align:center;padding:4px 14px 25px}.tracer-shown{color:#a14d26}.legend{display:flex;align-items:center;gap:13px;flex-wrap:wrap;font-size:10.5px;color:#657590;margin-top:8px}.legend b{font-weight:750}.swatch{display:inline-block;width:19px;height:3px;vertical-align:middle;border-radius:3px;margin-right:4px}.swatch.current{background:#3558bd}.swatch.initial{background:repeating-linear-gradient(90deg,#c57d37 0 6px,transparent 6px 9px)}
+@media(max-width:1050px){.shell{grid-template-columns:250px minmax(0,1fr)}.bottom-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.shell{grid-template-columns:1fr;padding:10px}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}.sidebar>h2,.sidebar>.intro,.sidebar>.buttons,.sidebar>.group:last-child{grid-column:1/-1}.sidebar>.group{margin-top:8px}.panel{padding:13px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:17px}header h1{font-size:20px}}@media(max-width:520px){.sidebar{display:block}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric strong{font-size:17px}.canvas-wrap{padding:3px}header .context{display:none}.mathline{font-size:15px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.collision-controls{background:#f8fbff;border:1px solid #dbe6f9;border-radius:9px;padding:13px 11px 4px;margin-top:13px}.collision-controls h3{margin-bottom:10px;color:#4767a4}.collision-hint{background:#edf4ff;border-left:3px solid #6984d7;padding:8px 10px;color:#425b8a;font-size:10.5px;line-height:1.5;border-radius:5px;margin:8px 0 12px}.collision-status{color:#3c6094;font-size:11.5px;font-weight:650;margin-top:8px;line-height:1.5}.swatch.maxwell{background:#139d8f}.swatch.free{background:repeating-linear-gradient(90deg,#a259c8 0 6px,transparent 6px 10px)}#collisionEquation{color:#0b797b;margin:6px 0 0}.collision-controls input[type=range]{accent-color:#078d89}
+
+/* Direct manipulation of the initial distribution */
+.editor{background:#f6f9ff;border:1px solid #d9e4f7;border-radius:10px;padding:12px;margin:10px 0 12px}.editor .control{margin:9px 0 12px}.editor .control:last-child{margin-bottom:0}.editor-actions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.editor-actions .btn{font-size:11px;padding:7px 9px}.edit-tip{font-size:11px;line-height:1.55;color:#47618e;background:#eef4ff;padding:9px 10px;border-left:3px solid #6079e5;border-radius:5px;margin:10px 0}.edit-tip strong{color:#2845a6}.editor-meta{font-size:11px;color:#4a6287;margin-top:10px;line-height:1.55}.editor-meta b{color:#283e86}.small-pill{display:inline-block;background:#e3ecfb;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;color:#32508f}#phaseCanvas.editable{touch-action:none;cursor:grab}#phaseCanvas.dragging{cursor:grabbing}.editor .control select{padding:8px}.velocity-caption{font-size:11px;color:#5b6e91;margin-top:9px;line-height:1.6}.velocity-caption strong{color:#2d4b9f}.velocity-legend{font-size:11px;color:#7185a2;margin:7px 0 0}
+/* Live numerical comparison of local non-Maxwellianity */
+.nonmax-panel{margin:13px 0 10px;padding:12px 13px;border:1px solid #dee6f3;border-radius:10px;background:#fbfcff}
+.nonmax-title{font-size:12px;font-weight:750;letter-spacing:.1px;color:#253b65;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.nonmax-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:11px}
+.nonmax-value{background:white;border:1px solid #e1e6f1;border-radius:9px;padding:12px 14px;border-left:4px solid #355bd4;min-width:0}
+.nonmax-value.reference{border-left-color:#9459bd}
+.nonmax-value label{font-size:11px;color:#586d8e;font-weight:680;display:block;line-height:1.4}
+.nonmax-value strong{display:block;color:#29469b;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums;margin:5px 0 4px}
+.nonmax-value.reference strong{color:#8150a4}
+.nonmax-value small{color:#7686a1;line-height:1.35;display:block;font-size:10px}
+.nonmax-hint{font-size:11px;color:#637695;line-height:1.55;margin-top:9px}
+@media(max-width:430px){.nonmax-panel{padding:10px}.nonmax-values{gap:7px}.nonmax-value{padding:10px}.nonmax-value strong{font-size:23px}}
+
+/* Field amplitude sliders and instantaneous field profile */
+.field-controls{background:#f5f9ff;border:1px solid #dbe6fb;border-radius:9px;padding:12px 11px 3px;margin:10px 0 14px}.field-controls input[type=range]{accent-color:#3166bf}.field-preview{margin:9px 0 13px;background:#f9fbff;border:1px solid #dce5f4;border-radius:9px;padding:10px}.field-preview-head{display:flex;justify-content:space-between;gap:8px;color:#46618f;font-size:11px;margin-bottom:7px}.field-preview canvas{width:100%;height:auto;border-radius:6px;display:block;background:#fff;border:1px solid #e2eaf6}.field-preview .desc{margin:6px 0 0;font-size:10.5px;color:#607596;line-height:1.45}.field-status{padding:8px 9px;border:1px solid #d7e5f6;border-radius:7px;color:#254e87;background:#edf5ff;font-size:11px;line-height:1.5;font-weight:650;margin:2px 0 11px}
+
+/* Keep animation controls directly above the plots, including on mobile. */
+.playback-toolbar{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:auto minmax(155px,1fr) minmax(100px,140px);align-items:center;gap:16px;padding:12px 15px;border-radius:12px;background:rgba(255,255,255,.98);border:1px solid #cfdcf1;box-shadow:0 5px 22px #142a5d23;backdrop-filter:blur(7px)}
+.playback-actions{display:flex;gap:7px;flex-wrap:nowrap}.playback-actions .btn{min-height:39px;white-space:nowrap;padding:9px 13px}.playback-actions #play{min-width:95px}
+.playback-label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:3px;font-size:11px;font-weight:700;color:#4a6187}.playback-label strong{font-variant-numeric:tabular-nums;color:#254ca6;font-size:12px}
+.playback-scrub,.playback-speed{min-width:0}.playback-scrub input,.playback-speed input{display:block;width:100%;accent-color:var(--cobalt);cursor:pointer;margin:7px 0 2px;min-height:22px}
+@media(max-width:1000px){.playback-toolbar{grid-template-columns:1fr minmax(110px,135px);gap:9px 16px}.playback-actions{grid-column:1/-1}}
+@media(max-width:520px){.playback-toolbar{top:4px;padding:9px;grid-template-columns:minmax(0,1fr) 90px;gap:8px 10px}.playback-actions{justify-content:space-between}.playback-actions .btn{flex:1;min-width:0;font-size:12px;padding:9px 8px}.playback-actions #play{min-width:100px}.playback-label{font-size:10.5px}.playback-label strong{font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Kinetic Equation Explorer</h1><p>From Vlasov dynamics to magnetic mirroring, electrostatic waves and collisions</p><div class="credit">Elaborato da Marco Gobbin</div></div>
+  <div class="context">Interactive 1D–1V teaching model<br>Offline HTML · no external libraries</div>
+</header>
+<div class="shell">
+<aside class="sidebar">
+  <h2>Experiment controls</h2>
+  <p class="intro">Build an initial phase-space distribution, then change the fields with sliders. Explore mirror reflection, wave–particle motion, and a simplified BGK collision model.</p>
+  <div class="group">
+    <h3>Particle dynamics</h3>
+    <div class="control"><label for="forceMode">Applied force</label><select id="forceMode"><option value="free">Free streaming · a = 0</option><option value="electric">Uniform electric field · a = qE/m</option><option value="harmonic">Electrostatic restoring force · a = −ω²x</option><option value="mirror">Magnetic mirror · a = −(μ/m) ∂B/∂s</option><option value="wave">Electrostatic travelling wave · E(x,t)</option></select></div>
+    <div class="control hidden" id="accelGroup"><div class="namevalue"><label for="accel">Electric acceleration</label><span class="readout" id="accelValue">+0.60</span></div><input id="accel" type="range" min="-1.1" max="1.1" step="0.05" value="0.6"><div class="desc">Dimensionless qE/m</div></div>
+    <div class="control hidden" id="omegaGroup"><div class="namevalue"><label for="omega">Oscillation frequency</label><span class="readout" id="omegaValue">1.10</span></div><input id="omega" type="range" min="0.45" max="2" step="0.05" value="1.10"><div class="desc">Dimensionless ω; phase-space rotation</div></div>
+    <div id="mirrorGroup" class="field-controls hidden">
+      <div class="control"><div class="namevalue"><label for="mirrorB">Minimum magnetic field Bmin</label><span class="readout" id="mirrorBValue">1.00</span></div><input type="range" id="mirrorB" min="0.25" max="2.5" step="0.05" value="1"><div class="desc">Normalized B at the midplane. At fixed μ, increasing Bmin strengthens mirroring when Rm &gt; 1.</div></div>
+      <div class="control"><div class="namevalue"><label for="mirrorR">Mirror ratio Rm = Bmax / Bmin</label><span class="readout" id="mirrorRValue">3.00</span></div><input type="range" id="mirrorR" min="1" max="5" step="0.1" value="3"></div>
+      <div class="control"><div class="namevalue"><label for="mirrorMu">Magnetic moment μ / m</label><span class="readout" id="mirrorMuValue">0.85</span></div><input type="range" id="mirrorMu" min="0.05" max="1.5" step="0.05" value="0.85"><div class="desc">The model follows particles with one fixed magnetic moment μ; v means parallel velocity v∥.</div></div>
+      <div class="field-status" id="mirrorStatus">Magnetic trapping test: —</div>
+      <button class="btn" type="button" id="mirrorDemo" style="width:100%;margin-bottom:10px">↺ Try: magnetic trapping</button>
+    </div>
+    <div id="waveGroup" class="field-controls hidden">
+      <div class="control"><div class="namevalue"><label for="waveE">Wave field amplitude qE0 / m</label><span class="readout" id="waveEValue">1.10</span></div><input type="range" id="waveE" min="0" max="2.5" step="0.05" value="1.1"><div class="desc">Set to zero to recover free streaming.</div></div>
+      <div class="control"><div class="namevalue"><label for="waveK">Wavenumber k</label><span class="readout" id="waveKValue">1.30</span></div><input type="range" id="waveK" min="0.45" max="2.8" step="0.05" value="1.3"></div>
+      <div class="control"><div class="namevalue"><label for="waveV">Phase velocity vph = ω/k</label><span class="readout" id="waveVValue">0.80</span></div><input type="range" id="waveV" min="-1.8" max="1.8" step="0.05" value="0.8"><div class="desc">The field is E ∝ sin(kx − kvph t). The wave is prescribed, not self-consistent.</div></div>
+      <div class="field-status" id="waveStatus">Wave trapping test: —</div>
+      <button class="btn" type="button" id="waveDemo" style="width:100%;margin-bottom:10px">↺ Try: wave trapping</button>
+    </div>
+    <div id="fieldPreview" class="field-preview hidden"><div class="field-preview-head"><b id="fieldTitle">Applied field profile</b><span id="fieldDetail">normalized</span></div><canvas id="fieldCanvas" width="520" height="170" role="img" aria-label="Prescribed magnetic or electric field as a function of position"></canvas><div class="desc" id="fieldHelp"></div></div>
+  </div>
+  <div class="group collision-controls">
+    <h3>Collisions · separate from applied force</h3>
+    <div class="control"><label for="collisionMode">Collision operator</label>
+      <select id="collisionMode"><option value="none">None · collisionless Vlasov</option><option value="bgk">BGK · relaxation towards a local Maxwellian</option></select>
+    </div>
+    <div id="collisionStrength" class="hidden">
+      <div class="control"><div class="namevalue"><label for="collisionNu">Collision frequency ν</label><span class="readout" id="collisionNuValue">1.20</span></div>
+        <input type="range" id="collisionNu" min="0" max="3" step="0.1" value="1.2">
+        <div class="desc">Dimensionless ν. The ratio of evolution time to collision time is νt. Set ν = 0 for the collisionless limit.</div>
+      </div>
+      <label class="checkboxline"><input id="showMaxwellian" type="checkbox" checked> Compare local f(v) with Maxwellian</label>
+      <label class="checkboxline"><input id="showCollisionless" type="checkbox" checked> Compare with ν = 0 at the same time</label>
+      <button type="button" class="btn" id="collisionDemo" style="margin:1px 0 10px;width:100%;border-color:#9ccfce;color:#096c6d;background:#edf9f6">↺ Try: two beams + BGK</button>
+    </div>
+    <div class="collision-hint" id="collisionHint">Without collisions, f is conserved along the exact characteristics.</div>
+  </div>
+  <div class="group">
+    <h3>Initial distribution</h3>
+    <div class="control"><label for="distribution">Initial f(x,v,0) · quick presets</label><select id="distribution"><option value="single">Single Gaussian cloud</option><option value="two">Two counter-streaming beams</option><option value="custom">Custom mixture (edit below)</option></select></div>
+    <div class="edit-tip"><strong>NEW · Shape f yourself.</strong> At <b>t = 0</b>, drag a numbered centre in the phase-space plot to change its position and mean velocity. Drag its <b>square handles</b> to change the x and v spreads. Changes immediately propagate to all moments.</div>
+    <div class="editor">
+      <label class="checkboxline" style="margin:0"><input type="checkbox" id="editF" checked> Show interactive editing handles at t = 0</label>
+      <div class="editor-actions"><button type="button" id="editAtZero" class="btn">↺ Edit initial f</button><button type="button" id="addCloud" class="btn">+ Add population</button><button type="button" id="removeCloud" class="btn">− Remove</button></div>
+      <div class="control"><label for="activeComponent">Selected population</label><select id="activeComponent" aria-label="Choose one Gaussian population"></select></div>
+      <div class="control"><div class="namevalue"><label for="spreadX">Position spread σx</label><span class="readout" id="spreadXValue">0.78</span></div><input id="spreadX" type="range" min="0.15" max="2.00" step="0.01" value="0.78"></div>
+      <div class="control"><div class="namevalue"><label for="spreadV">Velocity spread σv</label><span class="readout" id="spreadVValue">0.58</span></div><input id="spreadV" type="range" min="0.12" max="1.35" step="0.01" value="0.58"></div>
+      <div class="control"><div class="namevalue"><label for="tilt">Initial x–v correlation ρ</label><span class="readout" id="tiltValue">0.00</span></div><input id="tilt" type="range" min="-0.85" max="0.85" step="0.01" value="0"><div class="desc">Tilts the initial Gaussian while preserving a valid nonnegative distribution.</div></div>
+      <div class="control"><div class="namevalue"><label for="populationWeight">Population weight Ni</label><span class="readout" id="populationWeightValue">1.00</span></div><input id="populationWeight" type="range" min="0.10" max="2.00" step="0.02" value="1.00"><div class="desc">Integrated particle number of the selected population, in normalized units.</div></div>
+      <div class="editor-meta" id="editorMeta">Total particle number: ΣNi = 1.00. <span class="small-pill">1 population</span></div>
+    </div>
+    <label class="checkboxline"><input id="showParticles" type="checkbox" checked> Show sample particle trajectories</label>
+    <label class="checkboxline"><input id="showMarker" type="checkbox" checked> Highlight one traced particle</label>
+    <label class="checkboxline"><input id="showPatch" type="checkbox" checked> Show an evolving phase-space patch</label>
+  </div>
+  <div class="group">
+    <h3>Macroscopic moments of f</h3>
+    <div class="control"><label for="moment">Plot a quantity derived from f(x,v,t)</label>
+      <select id="moment">
+        <option value="n">Particle density · n(x)</option>
+        <option value="gamma">Particle flux · Γ(x)</option>
+        <option value="u">Mean velocity · u(x)</option>
+        <option value="T">Velocity spread · T₁D(x)</option>
+        <option value="p">Kinetic pressure · pₓₓ(x)</option>
+        <option value="K">Kinetic energy density · K(x)</option>
+      </select>
+    </div>
+    <div class="control"><div class="namevalue"><label for="probeX">Local probe at x</label><span class="readout" id="probeXValue">−0.50</span></div>
+      <input id="probeX" type="range" min="-4.5" max="4.5" step="0.05" value="-0.5">
+      <div class="desc">The dashed vertical line measures the selected moment at this position.</div>
+    </div>
+  </div>
+
+  <div class="group"><button type="button" class="btn" id="export" title="Save the two plots as a PNG image">↓ Export plots (PNG)</button><p class="desc" style="font-size:10.5px;color:#7a89a0;line-height:1.55">All fields and parameters are dimensionless. The mirror is a fixed-μ guiding-centre model; the travelling wave is prescribed. BGK is not a Coulomb/Landau solver.</p></div>
+</aside>
+<main class="main">
+  <!-- Playback controls live next to the plots and remain visible while scrolling. -->
+  <section class="playback-toolbar" aria-label="Animation and time controls">
+    <div class="playback-actions">
+      <button type="button" class="btn primary" id="play" aria-label="Play or pause the animation">▶ Play</button>
+      <button type="button" class="btn" id="reset" title="Return to t = 0">↺ Reset</button>
+      <button type="button" class="btn" id="step" title="Advance by 0.20 time units">+0.20</button>
+    </div>
+    <div class="playback-scrub">
+      <div class="playback-label"><label for="time">Time t</label><strong id="timeValue">0.00</strong></div>
+      <input id="time" type="range" min="0" max="4.5" step="0.01" value="0" aria-label="Animation time">
+    </div>
+    <div class="playback-speed">
+      <div class="playback-label"><label for="speed">Speed</label><strong id="speedValue">1.0×</strong></div>
+      <input id="speed" type="range" min="0.3" max="2.5" step="0.1" value="1" aria-label="Playback speed">
+    </div>
+  </section>
+  <section class="panel">
+    <div class="plot-head"><div><h2>Phase-space distribution f(x,v,t)</h2><p class="intro">A 1D–1V slice of kinetic phase space: position <i>x</i> versus velocity <i>v</i> (or <i>v∥</i> for the magnetic mirror). Nonlinear-field and BGK cases are evaluated numerically; simple collisionless cases use exact trajectories.</p></div><span class="pill" id="modeBadge">Free streaming</span></div>
+    <div class="canvas-wrap"><canvas id="phaseCanvas" width="1060" height="505" role="img" aria-label="Phase-space density: drag initial Gaussian centres and resize handles at t = 0"></canvas></div>
+    <div class="legend"><span><span class="swatch current"></span> Evolved phase-space patch</span><span><span class="swatch initial"></span> Initial patch</span><span class="tracer-shown">●</span> Traced particle</div>
+    <div class="metrics"><div class="metric"><label>Time t</label><strong id="metricTime">0.00</strong><small>dimensionless</small></div><div class="metric"><label>Phase-space area ratio</label><strong id="metricJacobian">1.000</strong><small id="metricJacobianInfo">det J = 1 (Liouville)</small></div><div class="metric"><label>f along the traced orbit</label><strong id="metricTracer">1.000</strong><small id="metricTracerInfo">f(t) / f(0) along orbit</small></div><div class="metric"><label><span id="metricSpreadTitle">Spatial spread σ<sub>x</sub></span></label><strong id="metricSpread">0.780</strong><small id="spreadNote">first Gaussian component</small></div></div>
+    <div class="caption" id="dynamicsCaption"></div><div class="collision-status" id="collisionStatus"></div>
+  </section>
+  <div class="bottom-grid">
+  <section class="panel">
+    <div class="plot-head"><div><h2 id="momentTitle">Particle density n(x,t)</h2><p class="intro" id="momentSubtitle">Moments of the velocity distribution give observable spatial profiles.</p></div><span class="pill" id="momentBadge">Zeroth moment</span></div>
+    <div class="canvas-wrap"><canvas id="densityCanvas" width="920" height="355" role="img" aria-label="Spatial particle density before and after kinetic evolution"></canvas></div>
+    <div class="legend"><span><span class="swatch initial"></span> <span id="legendInitial">Initial moment, t = 0</span></span><span><span class="swatch current"></span> <span id="legendCurrent">Current moment, t</span></span><span style="color:#8997ae">┆ Probe x</span></div>
+    <div class="moment-formula" id="momentFormula">n(x,t) = ∫ f(x,v,t) dv</div>
+    <div class="probe-box">
+      <div class="probe-data"><div><b>Local measurement</b> at <span id="probeXInline">x = −0.50</span></div><small id="probeUnit">Dimensionless units</small></div>
+      <div><small>Initially</small><div><strong id="probeInitial">—</strong></div></div>
+      <div><small>At current t</small><div><strong id="probeCurrent">—</strong></div></div>
+      <div><small>Local density</small><div><strong id="probeDensity">—</strong></div></div>
+    </div>
+    <div class="moment-warning" id="momentWarning">All moments are evaluated analytically from the evolving Gaussian distribution, not estimated from the displayed tracer particles.</div>
+    <div class="keypoint" id="momentKeypoint"><b>Key point:</b> The local density can change even while the collisionless distribution f is conserved along trajectories.</div>
+  </section>
+  <section class="panel">
+    <h2>Build the kinetic equation</h2>
+    <div class="form-steps">
+      <div class="step"><div class="no">1</div><div><b>Equations of motion:</b> dx/dt = v, dv/dt = a(x).</div></div>
+      <div class="step"><div class="no">2</div><div><b>Liouville:</b> ∂<sub>x</sub>v + ∂<sub>v</sub>a = 0, so phase-space area is preserved.</div></div>
+      <div class="step"><div class="no">3</div><div id="collisionStep"><b>Collisionless conservation:</b> df/dt = 0 along the particle trajectories.</div></div>
+    </div>
+    <div class="formula"><div class="line"><b>Chain rule</b></div><div class="mathline small">df/dt = ∂f/∂t + (dx/dt) ∂f/∂x + (dv/dt) ∂f/∂v</div><div class="line" style="border-top:1px solid #dce5f4;margin-top:7px;padding-top:10px"><b>Vlasov equation (1D–1V)</b></div><div class="mathline" id="kineticEquation">∂f/∂t + v ∂f/∂x + a(x) ∂f/∂v = 0</div><div class="mathline small hidden" id="collisionEquation">C_BGK[f] = ν (M[n,u,T] − f)</div><div class="line" style="color:#667b98;font-size:12px">where <span id="forceFormula">a(x) = 0</span></div></div>
+    <div class="note" id="kineticScope"><b>Scope of this demonstration.</b> The simple collisionless cases use exact characteristics; nonlinear-force cases use reversible area-preserving characteristic tracing. BGK uses numerical split-step evolution. This is not a self-consistent plasma or Coulomb/Landau collision calculation.</div>
+  </section>
+  </div>
+  <section class="panel">
+    <div class="plot-head"><div><h2>Velocity distribution at the probe · f(x₀,v,t)</h2><p class="intro">A vertical slice through the phase-space distribution. Use the <b>Local probe at x</b> control above to move the slice.</p></div><span class="pill" id="velocityProbeLabel">x₀ = −0.50</span></div>
+    <div class="canvas-wrap"><canvas id="velocityCanvas" width="920" height="290" role="img" aria-label="Initial and current velocity distributions at the chosen spatial probe"></canvas></div>
+    <div class="legend"><span><span class="swatch initial"></span> f(x₀,v,0)</span><span><span class="swatch current"></span> f(x₀,v,t)</span><span id="maxwellLegend" class="hidden"><span class="swatch maxwell"></span> local Maxwellian M</span><span id="freeLegend" class="hidden"><span class="swatch free"></span> ν = 0 at same t</span><span style="color:#6b7d9c">┆ Local mean velocity u</span></div>
+    <div class="nonmax-panel" aria-label="Local non-Maxwellianity comparison">
+      <div class="nonmax-title"><span>Non-Maxwellianity at the probe</span><span style="font-size:11px;color:#7183a0;font-weight:550">A = ∫ |f − f<sub>M</sub>| dv / (2n)</span></div>
+      <div class="nonmax-values">
+        <div class="nonmax-value"><label for="nonMaxBGK">With BGK collisions · A<sub>BGK</sub></label><strong id="nonMaxBGK">—</strong><small id="nonMaxBGKInfo">Activate BGK to compare</small></div>
+        <div class="nonmax-value reference"><label for="nonMaxFree">Without collisions · A<sub>ν=0</sub></label><strong id="nonMaxFree">0.000</strong><small>Same x₀, same time t</small></div>
+      </div>
+      <div class="nonmax-hint" id="nonMaxHint">A = 0 means a local Maxwellian; A &gt; 0 measures the difference in shape. Values refer to the selected position and instant.</div>
+    </div>
+    <div class="velocity-caption" id="velocityCaption">The area under each velocity curve, integrated over all v, gives the local density n(x₀,t). Curves are plotted over the displayed velocity window.</div>
+  </section>
+</main>
+</div>
+<footer>Kinetic Equation Explorer v5.2 · Teaching demonstrator · Marco Gobbin · Editable initial f · Magnetic mirror, wave and BGK · 1D position × 1D velocity</footer>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), TMAX=4.5, XMIN=-6,XMAX=6,VMIN=-3.6,VMAX=3.6;
+let playing=false,lastFrame=0,currentTime=0,components=[],dots=[],tracer0={x:-0.75,v:0.74},fTracer0=0,fPeak=1,activeIndex=0,dragAction=null,dragStart=null;
+const phase=$('phaseCanvas'),pctx=phase.getContext('2d'),density=$('densityCanvas'),dctx=density.getContext('2d'),velocityCanvas=$('velocityCanvas'),vctx=velocityCanvas.getContext('2d');
+const low=document.createElement('canvas'); low.width=265;low.height=150;const lctx=low.getContext('2d',{willReadFrequently:true});const heat=lctx.createImageData(low.width,low.height);
+const pc={l:66,r:19,t:18,b:50},dc={l:53,r:18,t:13,b:47};
+const PL=()=>pc.l,PR=()=>phase.width-pc.r,PT=()=>pc.t,PB=()=>phase.height-pc.b;
+const DL=()=>dc.l,DR=()=>density.width-dc.r,DT=()=>dc.t,DB=()=>density.height-dc.b;
+const xpx=x=>PL()+(x-XMIN)/(XMAX-XMIN)*(PR()-PL());const vpy=v=>PB()-(v-VMIN)/(VMAX-VMIN)*(PB()-PT());
+const xdx=x=>DL()+(x-XMIN)/(XMAX-XMIN)*(DR()-DL());
+const invXpx=x=>XMIN+(x-PL())/(PR()-PL())*(XMAX-XMIN);
+const invVpy=y=>VMIN+(PB()-y)/(PB()-PT())*(VMAX-VMIN);
+const mode=()=>$('forceMode').value,dist=()=>$('distribution').value;
+const momentMeta={
+ n:{title:'Particle density n(x,t)',formula:'n(x,t) = ∫ f(x,v,t) dv',badge:'Zeroth moment',axis:'n(x,t)',tip:'Integrating over all velocities yields the particle density, even while the distribution is advected incompressibly in phase space.'},
+ gamma:{title:'Particle flux Γ(x,t)',formula:'Γ(x,t) = ∫ v f(x,v,t) dv = n u',badge:'First moment',axis:'Γ(x,t)',tip:'The signed particle flux measures how much of the distribution is moving through each position per unit time.'},
+ u:{title:'Mean velocity u(x,t)',formula:'u(x,t) = (1/n) ∫ v f(x,v,t) dv',badge:'First / zeroth',axis:'u(x,t)',tip:'Mean velocity is obtained by dividing the first moment by the local density. It can differ strongly across x.'},
+ T:{title:'Velocity-spread temperature T₁D(x,t)',formula:'T₁D(x,t) = (m/kB)[ (1/n)∫v² f dv − u² ]',badge:'Central second',axis:'T₁D(x,t)',tip:'The 1D kinetic temperature measures the spread of velocities about the local mean. For two counter-streaming beams it is not necessarily an equilibrium thermodynamic temperature.'},
+ p:{title:'Pressure component pₓₓ(x,t)',formula:'pₓₓ(x,t) = m ∫ (v−u)² f dv = n kB T₁D',badge:'Second central',axis:'pₓₓ(x,t)',tip:'The kinetic pressure is the second central velocity moment, multiplied by the particle mass.'},
+ K:{title:'Kinetic energy density K(x,t)',formula:'K(x,t) = (m/2) ∫ v² f(x,v,t) dv',badge:'Second raw',axis:'K(x,t)',tip:'Kinetic energy density includes both collective flow energy and random velocity-spread energy.'}
+};
+const params=()=>({mode:mode(),a:+$('accel').value,w:+$('omega').value,Bmin:+$('mirrorB').value,R:+$('mirrorR').value,mu:+$('mirrorMu').value,E:+$('waveE').value,k:+$('waveK').value,vph:+$('waveV').value});
+const fmt=(v,d=2)=>v.toFixed(d);const gaussian=(z,mu,s)=>Math.exp(-.5*((z-mu)/s)**2)/(Math.sqrt(2*Math.PI)*s);
+function fInitial(x,v){let out=0;for(const b of components){let dx=(x-b.mx)/b.sx,dv=(v-b.mv)/b.sv,r=b.rho||0,den=1-r*r;out+=b.weight*Math.exp(-.5*(dx*dx-2*r*dx*dv+dv*dv)/den)/(2*Math.PI*b.sx*b.sv*Math.sqrt(den))}return out}
+// BGK collision operator is not an applied force. For collisions, evolve a grid
+// by Strang splitting: local BGK relaxation / Hamiltonian advection / BGK.
+// The elementary collisionless branch uses exact analytical characteristics; wave/mirror are traced symplectically.
+const CNX=320,CNV=169,CX0=-12,CX1=12,CV0=-6.2,CV1=6.2;
+const CDX=(CX1-CX0)/CNX,CDV=(CV1-CV0)/CNV,CDVN=CDV/Math.sqrt(2*Math.PI);
+let cGrid=null,cTime=0,cMoments=null,cMass=0,cSpread=0;
+const nonlinear=()=>mode()==='mirror'||mode()==='wave';
+const gridOn=()=>collisionsOn()||nonlinear();
+const collisionSelected=()=>$('collisionMode').value==='bgk';
+const collisionsOn=()=>collisionSelected()&&+$('collisionNu').value>0;
+function invalidateCollisions(){cGrid=null;cTime=0;cMoments=null}
+function initialiseCollisions(){cGrid=new Float64Array(CNX*CNV);
+ for(let j=0;j<CNV;j++){const v=CV0+(j+.5)*CDV,off=j*CNX;for(let i=0;i<CNX;i++)cGrid[off+i]=fInitial(CX0+(i+.5)*CDX,v)}
+ cTime=0;cMoments=null;
+}
+function collisionSampleFrom(src,x,v){
+ const fi=(x-CX0)/CDX-.5,fj=(v-CV0)/CDV-.5;
+ if(fi<0||fj<0||fi>CNX-1||fj>CNV-1)return 0;
+ const i=Math.min(CNX-2,Math.floor(fi)),j=Math.min(CNV-2,Math.floor(fj)),a=fi-i,b=fj-j;
+ const k=j*CNX+i,l=k+CNX;
+ return Math.max(0,(1-b)*((1-a)*src[k]+a*src[k+1])+b*((1-a)*src[l]+a*src[l+1]));
+}
+// BGK uses density, mean velocity and kinetic temperature of each x-slice.
+// Renormalising the discrete Maxwellian ensures exact local number preservation
+// in the collision substep. Momentum and energy preservation are approximate
+// on the finite velocity grid, and advection has finite-domain losses.
+function bgkHalfStep(dt){if(dt<=0)return;const fac=Math.exp(-(+ $('collisionNu').value)*dt),blend=1-fac;
+ const m0=new Float64Array(CNX),m1=new Float64Array(CNX),m2=new Float64Array(CNX);
+ for(let j=0;j<CNV;j++){let v=CV0+(j+.5)*CDV,v2=v*v,o=j*CNX;for(let i=0;i<CNX;i++){const f=cGrid[o+i]*CDV;m0[i]+=f;m1[i]+=v*f;m2[i]+=v2*f}}
+ const mean=new Float64Array(CNX),varr=new Float64Array(CNX),norm=new Float64Array(CNX);
+ for(let i=0;i<CNX;i++){
+  if(m0[i]<1e-12)continue;
+  mean[i]=m1[i]/m0[i];varr[i]=Math.max(.008,m2[i]/m0[i]-mean[i]*mean[i]);
+ }
+ for(let j=0;j<CNV;j++){const v=CV0+(j+.5)*CDV;
+  for(let i=0;i<CNX;i++)if(m0[i]>=1e-12){const z=v-mean[i];norm[i]+=CDV*Math.exp(-.5*z*z/varr[i])}}
+ for(let j=0;j<CNV;j++){const v=CV0+(j+.5)*CDV,o=j*CNX;
+  for(let i=0;i<CNX;i++){const prior=cGrid[o+i];if(m0[i]<1e-12){cGrid[o+i]=fac*prior;continue}
+   const z=v-mean[i],M=m0[i]*Math.exp(-.5*z*z/varr[i])/norm[i];cGrid[o+i]=fac*prior+blend*M;
+  }
+ }
+}
+// Area-preserving velocity-Verlet (kick-drift-kick) for the 1D mirror / travelling wave.
+// The mirror is a fixed-mu guiding-centre slice: H = v_parallel^2/2 + mu B(s)/m.
+// Both forces are independent of v, so their Hamiltonian phase-space flow preserves area.
+const MIRROR_LEN=2.15;
+function mirrorField(s,p){const z=s/MIRROR_LEN;return p.Bmin*(1+(p.R-1)*(1-Math.exp(-z*z)))}
+function acceleration(x,t,p){
+ if(p.mode==='mirror'){const z=x/MIRROR_LEN;return -p.mu*p.Bmin*(p.R-1)*(2*z/MIRROR_LEN)*Math.exp(-z*z)}
+ if(p.mode==='wave')return p.E*Math.sin(p.k*(x-p.vph*t));
+ if(p.mode==='harmonic')return -p.w*p.w*x;
+ if(p.mode==='electric')return p.a;
+ return 0;
+}
+function traceNonlinear(x,v,t0,dt,p){
+ if(Math.abs(dt)<1e-12)return{x,v};
+ const n=Math.max(1,Math.ceil(Math.abs(dt)/.10)),h=dt/n;
+ for(let z=0;z<n;z++){
+  const tt=t0+z*h,half=v+.5*h*acceleration(x,tt,p);
+  x+=h*half; v=half+.5*h*acceleration(x,tt+h,p);
+ }
+ return{x,v};
+}
+function collisionAdvect(dt,p){const out=new Float64Array(cGrid.length),src=cGrid;
+ for(let j=0;j<CNV;j++){const v=CV0+(j+.5)*CDV,o=j*CNX;
+  for(let i=0;i<CNX;i++){const x=CX0+(i+.5)*CDX,old=backward(x,v,dt,p,cTime+dt);out[o+i]=collisionSampleFrom(src,old.x,old.v)}
+ }
+ cGrid=out;
+}
+function makeCollisionMoments(){
+ const n=new Float64Array(CNX),g=new Float64Array(CNX),e2=new Float64Array(CNX);
+ for(let j=0;j<CNV;j++){const v=CV0+(j+.5)*CDV,w=v*CDV,z=v*v*CDV,o=j*CNX;
+  for(let i=0;i<CNX;i++){const f=cGrid[o+i];n[i]+=f*CDV;g[i]+=f*w;e2[i]+=f*z}}
+ cMoments={n,g,e2};let all=0,sx=0,sxx=0;
+ for(let i=0;i<CNX;i++){const xx=CX0+(i+.5)*CDX,a=n[i]*CDX;all+=a;sx+=xx*a;sxx+=xx*xx*a}
+ cMass=all;cSpread=all>1e-20?Math.sqrt(Math.max(0,sxx/all-(sx/all)**2)):0;
+}
+function ensureCollisions(){
+ if(!gridOn())return;
+ const p=params();
+ // Without BGK, sample the exact initial f at the inverse Hamiltonian characteristics.
+ // No time-step interpolation of f: Liouville's theorem remains visible even for waves and mirrors.
+ if(nonlinear()&&!collisionsOn()){
+  if(cGrid&&Math.abs(cTime-currentTime)<1e-8&&cMoments)return;
+  cGrid=new Float64Array(CNX*CNV);
+  for(let j=0;j<CNV;j++){
+   const v=CV0+(j+.5)*CDV,o=j*CNX;
+   for(let i=0;i<CNX;i++){
+    const x=CX0+(i+.5)*CDX,old=backward(x,v,currentTime,p);
+    cGrid[o+i]=fInitial(old.x,old.v);
+   }
+  }
+  cTime=currentTime;makeCollisionMoments();return;
+ }
+ if(!cGrid||cTime>currentTime+1e-9)initialiseCollisions();
+ while(cTime+1e-9<currentTime){const dt=Math.min(.04,currentTime-cTime);
+  bgkHalfStep(.5*dt);collisionAdvect(dt,p);bgkHalfStep(.5*dt);cTime+=dt}
+ if(!cMoments||cTime>0)makeCollisionMoments();
+}
+function collisionMomentsAt(x){
+ if(!cMoments)return{n:0,gamma:0,u:0,T:0,p:0,K:0};
+ let z=(x-CX0)/CDX-.5,i=Math.max(0,Math.min(CNX-2,Math.floor(z))),f=Math.max(0,Math.min(1,z-i));
+ const lerp=k=>cMoments[k][i]*(1-f)+cMoments[k][i+1]*f;
+ const n=lerp('n'),m1=lerp('g'),m2=lerp('e2');const u=n>1e-12?m1/n:0,variance=n>1e-12?Math.max(0,m2/n-u*u):0;
+ return{n,gamma:m1,u,T:variance,p:n*variance,K:.5*m2};
+}
+function distributionAt(x,v,t,p){return gridOn()&&t>1e-10?collisionSampleFrom(cGrid,x,v):fInitial(backward(x,v,t,p).x,backward(x,v,t,p).v)}
+function forward(x,v,t,p,tStart=0){if(p.mode==='mirror'||p.mode==='wave')return traceNonlinear(x,v,tStart,t,p);if(p.mode==='free')return{x:x+v*t,v};if(p.mode==='electric')return{x:x+v*t+.5*p.a*t*t,v:v+p.a*t};let c=Math.cos(p.w*t),s=Math.sin(p.w*t);return{x:x*c+(v/p.w)*s,v:-p.w*x*s+v*c}}
+function backward(x,v,t,p,tEnd=t){if(p.mode==='mirror'||p.mode==='wave')return traceNonlinear(x,v,tEnd,-t,p);if(p.mode==='free')return{x:x-v*t,v};if(p.mode==='electric')return{x:x-v*t+.5*p.a*t*t,v:v-p.a*t};let c=Math.cos(p.w*t),s=Math.sin(p.w*t);return{x:x*c-(v/p.w)*s,v:p.w*x*s+v*c}}
+function mapLinear(p,t){if(p.mode==='harmonic')return{A:Math.cos(p.w*t),B:Math.sin(p.w*t)/p.w,c:0};return{A:1,B:t,c:p.mode==='electric'?.5*p.a*t*t:0}}
+function densityAt(x,t,p){const L=mapLinear(p,t);let out=0;for(const b of components){let center=L.A*b.mx+L.B*b.mv+L.c,spread=Math.sqrt((L.A*b.sx)**2+(L.B*b.sv)**2+2*L.A*L.B*(b.rho||0)*b.sx*b.sv);out+=b.weight*gaussian(x,center,spread)}return out}
+// Exact local velocity moments of a mixture of bivariate Gaussians transported
+// by an affine, area-preserving phase-space map. m = kB = 1 in the demo.
+function momentsAt(x,t,p,forceCollisionless=false){
+ if(!forceCollisionless&&gridOn() && t>1e-10)return collisionMomentsAt(x);
+ if(nonlinear() && t>1e-10){
+  // Needed only for the BGK-free reference; current numerical moments use cached cMoments.
+  let n=0,m1=0,m2=0;
+  for(let j=0;j<CNV;j++){
+   const v=CV0+(j+.5)*CDV,old=backward(x,v,t,p),f=fInitial(old.x,old.v)*CDV;
+   n+=f;m1+=v*f;m2+=v*v*f;
+  }
+  const u=n>1e-12?m1/n:0,T=n>1e-12?Math.max(0,m2/n-u*u):0;
+  return{n,gamma:m1,u,T,p:n*T,K:.5*m2};
+ }
+ let A=1,B=t,C=0,D=1,c=p.mode==='electric'?.5*p.a*t*t:0,d=p.mode==='electric'?p.a*t:0;
+ if(p.mode==='harmonic'){const co=Math.cos(p.w*t),si=Math.sin(p.w*t);A=co;B=si/p.w;C=-p.w*si;D=co;c=0;d=0}
+ let n=0,m1=0,m2=0;
+ for(const b of components){
+  const meanX=A*b.mx+B*b.mv+c, meanV=C*b.mx+D*b.mv+d;
+  const cov=(b.rho||0)*b.sx*b.sv;
+  const sxx=A*A*b.sx*b.sx+B*B*b.sv*b.sv+2*A*B*cov;
+  const sxv=A*C*b.sx*b.sx+B*D*b.sv*b.sv+(A*D+B*C)*cov;
+  const svv=C*C*b.sx*b.sx+D*D*b.sv*b.sv+2*C*D*cov;
+  const nk=b.weight*gaussian(x,meanX,Math.sqrt(sxx));
+  const uk=meanV+(sxv/sxx)*(x-meanX);
+  const varV=Math.max(0,svv-sxv*sxv/sxx);
+  n+=nk; m1+=nk*uk; m2+=nk*(uk*uk+varV);
+ }
+ const u=n>1e-280?m1/n:0, varV=n>1e-280?Math.max(0,m2/n-u*u):0;
+ return {n,gamma:m1,u,T:varV,p:n*varV,K:.5*m2};
+}
+function chosenMoment(){return $('moment').value}
+function rand(seed){return()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296}}
+function buildSample(){
+ const rng=rand(902017),normal=()=>Math.sqrt(-2*Math.log(Math.max(1e-12,rng())))*Math.cos(2*Math.PI*rng());dots=[];
+ const tot=components.reduce((a,b)=>a+b.weight,0);let cumulative=[];let q=0;for(const b of components){q+=b.weight/tot;cumulative.push(q)}
+ for(let i=0;i<680;i++){let r=rng(),c=cumulative.findIndex(cum=>r<=cum);if(c<0)c=components.length-1;const b=components[c],z1=normal(),z2=normal(),rho=b.rho||0;dots.push({x:b.mx+b.sx*z1,v:b.mv+b.sv*(rho*z1+Math.sqrt(1-rho*rho)*z2)})}
+ const selected=components[Math.min(activeIndex,components.length-1)];tracer0={x:selected.mx+.22*selected.sx,v:selected.mv+.20*selected.sv};fTracer0=Math.max(1e-280,fInitial(tracer0.x,tracer0.v));
+ fPeak=Math.max(1e-280,...components.map(b=>fInitial(b.mx,b.mv)));
+}
+function setComponents(){invalidateCollisions();if(dist()==='custom')return;
+ components=dist()==='two'?[{weight:.5,mx:-.30,mv:-1.30,sx:.68,sv:.37,rho:0},{weight:.5,mx:-.30,mv:1.30,sx:.68,sv:.37,rho:0}]:[{weight:1,mx:-.90,mv:.65,sx:.78,sv:.58,rho:0}];activeIndex=0;buildSample();syncEditor()}
+function edited(){invalidateCollisions();if($('distribution').value!=='custom')$('distribution').value='custom';buildSample();syncEditor();redraw()}
+function syncEditor(){
+ const sel=$('activeComponent'),n=components.length;sel.innerHTML=components.map((b,i)=>'<option value="'+i+'">Population '+(i+1)+'</option>').join('');activeIndex=Math.min(activeIndex,n-1);sel.value=String(activeIndex);
+ const b=components[activeIndex];for(const [id,field,out] of [['spreadX','sx','spreadXValue'],['spreadV','sv','spreadVValue'],['tilt','rho','tiltValue'],['populationWeight','weight','populationWeightValue']]){$(id).value=b[field];$(out).textContent=fmt(b[field])}
+ const total=components.reduce((a,b)=>a+b.weight,0);$('editorMeta').innerHTML='Total particle number <b>ΣN<sub>i</sub> = '+total.toFixed(2)+'</b> (conserved during evolution). <span class="small-pill">'+n+' population'+(n===1?'':'s')+'</span>';
+ $('addCloud').disabled=n>=3;$('removeCloud').disabled=n<=1;
+ $('editAtZero').textContent=currentTime>1e-8?'↺ Back to t = 0':'✓ Editing t = 0';
+ phase.classList.toggle('editable',!!$('editF').checked&&currentTime<1e-8&&!playing);
+}
+function ramp(q){const stops=[[250,252,255],[224,237,251],[157,198,243],[81,129,211],[32,55,139],[25,29,93]];const f=Math.max(0,Math.min(.99999,q))*(stops.length-1),i=Math.floor(f),u=f-i;return [0,1,2].map(k=>Math.round(stops[i][k]*(1-u)+stops[i+1][k]*u))}
+function drawHeatmap(p){const W=low.width,H=low.height,arr=heat.data;let z=0;for(let j=0;j<H;j++){const v=VMAX-((j+.5)/H)*(VMAX-VMIN);for(let i=0;i<W;i++){const x=XMIN+((i+.5)/W)*(XMAX-XMIN),ff=gridOn()&&currentTime>1e-10?collisionSampleFrom(cGrid,x,v):(function(){const old=backward(x,v,currentTime,p);return fInitial(old.x,old.v)})(),strength=Math.log1p(7*Math.min(1,ff/fPeak))/Math.log(8),rgb=ramp(strength);arr[z++]=rgb[0];arr[z++]=rgb[1];arr[z++]=rgb[2];arr[z++]=255}}lctx.putImageData(heat,0,0);pctx.imageSmoothingEnabled=true;pctx.drawImage(low,PL(),PT(),PR()-PL(),PB()-PT())}
+function drawPhase(){const p=params(),ctx=pctx;ctx.clearRect(0,0,phase.width,phase.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,phase.width,phase.height);drawHeatmap(p);ctx.save();ctx.beginPath();ctx.rect(PL(),PT(),PR()-PL(),PB()-PT());ctx.clip();
+ctx.strokeStyle='#a1b1ca';ctx.globalAlpha=.23;ctx.lineWidth=1;for(let xt=-6;xt<=6;xt+=2){let px=xpx(xt);ctx.beginPath();ctx.moveTo(px,PT());ctx.lineTo(px,PB());ctx.stroke()}for(let vt=-3;vt<=3;vt++){let y=vpy(vt);ctx.beginPath();ctx.moveTo(PL(),y);ctx.lineTo(PR(),y);ctx.stroke()}ctx.globalAlpha=1;
+if($('showParticles').checked){ctx.fillStyle=collisionsOn()?'rgba(18,34,78,.13)':'rgba(18,34,78,.38)';for(let q of dots){let s=forward(q.x,q.v,currentTime,p),xx=xpx(s.x),yy=vpy(s.v);if(xx<PL()||xx>PR()||yy<PT()||yy>PB())continue;ctx.beginPath();ctx.arc(xx,yy,1.45,0,Math.PI*2);ctx.fill()}}
+if($('showPatch').checked){let b=components[activeIndex];function ellipse(t,stroke,dash){ctx.beginPath();for(let k=0;k<=180;k++){let angle=2*Math.PI*k/180,xx=b.mx+1.55*b.sx*Math.cos(angle),vv=b.mv+1.55*b.sv*((b.rho||0)*Math.cos(angle)+Math.sqrt(1-(b.rho||0)**2)*Math.sin(angle)),s=forward(xx,vv,t,p),px=xpx(s.x),py=vpy(s.v);if(k===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.closePath();ctx.lineWidth=3;ctx.strokeStyle=stroke;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}ellipse(0,'#c27c34',[8,6]);ellipse(currentTime,collisionsOn()?'#9caecf':'#305bd4',collisionsOn()?[2,6]:[])}
+if($('showMarker').checked){const s=forward(tracer0.x,tracer0.v,currentTime,p),px=xpx(s.x),py=vpy(s.v);ctx.beginPath();ctx.arc(px,py,10,0,Math.PI*2);ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.stroke();ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.strokeStyle='#a63f22';ctx.lineWidth=3;ctx.stroke();ctx.beginPath();ctx.arc(px,py,2.7,0,Math.PI*2);ctx.fillStyle='#a63f22';ctx.fill()}
+if($('editF').checked&&currentTime<1e-8&&!playing){
+ // Draggable centroids and spread handles. Controls alter the initial distribution, not particle trajectories.
+ for(let i=0;i<components.length;i++){
+  const b=components[i],xx=xpx(b.mx),yy=vpy(b.mv),selected=i===activeIndex;
+  ctx.lineWidth=selected?3:2;ctx.strokeStyle=selected?'#fbad45':'#ffffff';ctx.fillStyle=selected?'#1439bd':'#4c7493';
+  ctx.beginPath();ctx.arc(xx,yy,selected?11:9,0,2*Math.PI);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#fff';ctx.font='bold 13px Segoe UI,Arial';ctx.textAlign='center';ctx.fillText(String(i+1),xx,yy+4);
+  if(selected){
+   const hx=xpx(b.mx+b.sx),hy=vpy(b.mv+b.sv);ctx.lineWidth=1.7;ctx.setLineDash([4,4]);ctx.strokeStyle='#efad35';
+   for(const h of [{x:hx,y:yy},{x:xx,y:hy}]){ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(h.x,h.y);ctx.stroke()}ctx.setLineDash([]);
+   for(const h of [{x:hx,y:yy,c:'#f4a024'},{x:xx,y:hy,c:'#039da4'}]){ctx.fillStyle=h.c;ctx.fillRect(h.x-7,h.y-7,14,14);ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.strokeRect(h.x-7,h.y-7,14,14)}
+  }
+ }
+}
+ctx.restore();ctx.strokeStyle='#90a4c3';ctx.lineWidth=1.3;ctx.strokeRect(PL(),PT(),PR()-PL(),PB()-PT());ctx.fillStyle='#596c8d';ctx.textAlign='center';ctx.font='13px Segoe UI, Arial';for(let xt=-6;xt<=6;xt+=2)ctx.fillText(xt,xpx(xt),PB()+22);ctx.fillText('Position x',.5*(PL()+PR()),phase.height-8);ctx.textAlign='right';for(let vt=-3;vt<=3;vt++)ctx.fillText(vt,PL()-13,vpy(vt)+4);ctx.save();ctx.translate(19,.5*(PT()+PB()));ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Velocity v',0,0);ctx.restore();ctx.fillStyle='#546c92';ctx.textAlign='left';ctx.font='12px Segoe UI, Arial';ctx.fillText('Phase-space density (normalized color scale)',PL()+11,PT()+23)}
+function drawDensity(){
+ const p=params(),ctx=dctx,k=chosenMoment(),meta=momentMeta[k],N=gridOn()?240:480;
+ ctx.clearRect(0,0,density.width,density.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,density.width,density.height);
+ const ys=[],y0=[],xs=[];let hi=-Infinity,lo=Infinity,maxN=0;
+ for(let i=0;i<=N;i++){
+  const x=XMIN+i*(XMAX-XMIN)/N,cur=momentsAt(x,currentTime,p),initial=momentsAt(x,0,p);
+  xs.push(x);ys.push(cur);y0.push(initial);maxN=Math.max(maxN,cur.n,initial.n)
+ }
+ const masking=(k==='u'||k==='T'),threshold=maxN*1e-4;
+ function value(m){return masking&&m.n<threshold?NaN:m[k]}
+ for(let i=0;i<=N;i++)for(const v of [value(ys[i]),value(y0[i])])if(Number.isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}
+ if(!Number.isFinite(hi)){hi=1;lo=0}
+ let margin=Math.max(1e-3,(hi-lo)*.12);
+ if(k==='gamma'||k==='u'){hi=Math.max(0,hi+margin);lo=Math.min(0,lo-margin)}
+ else {lo=0;hi=Math.max(.1,hi+margin)}
+ if(hi-lo<1e-8){hi=lo+1}
+ const ypx=y=>DB()-(y-lo)/(hi-lo)*(DB()-DT());
+ ctx.strokeStyle='#e5ebf6';ctx.lineWidth=1;
+ for(let j=0;j<=4;j++){
+  const val=lo+(hi-lo)*j/4,y=ypx(val);
+  ctx.beginPath();ctx.moveTo(DL(),y);ctx.lineTo(DR(),y);ctx.stroke();
+  ctx.fillStyle='#687a98';ctx.textAlign='right';ctx.font='11px Segoe UI, Arial';ctx.fillText(val.toFixed((hi-lo)<1?2:1),DL()-10,y+3)
+ }
+ for(let xt=-6;xt<=6;xt+=2){ctx.beginPath();ctx.moveTo(xdx(xt),DT());ctx.lineTo(xdx(xt),DB());ctx.stroke();ctx.fillStyle='#687a98';ctx.textAlign='center';ctx.fillText(xt,xdx(xt),DB()+21)}
+ if(lo<0&&hi>0){ctx.beginPath();ctx.moveTo(DL(),ypx(0));ctx.lineTo(DR(),ypx(0));ctx.strokeStyle='#97a3bd';ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([])}
+ function plot(arr,color,dash,w){ctx.beginPath();let active=false;
+  for(let i=0;i<=N;i++){const v=value(arr[i]);if(!Number.isFinite(v)){active=false;continue}const xx=xdx(xs[i]),yy=ypx(v);if(!active){ctx.moveTo(xx,yy);active=true}else ctx.lineTo(xx,yy)}
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])
+ }
+ plot(y0,'#c27c34',[8,5],2.8);plot(ys,'#355bd4',[],3.1);
+ const xProbe=+$('probeX').value,m=momentsAt(xProbe,currentTime,p),m0=momentsAt(xProbe,0,p),probeY=value(m);
+ ctx.setLineDash([5,4]);ctx.strokeStyle='#6c839b';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(xdx(xProbe),DT());ctx.lineTo(xdx(xProbe),DB());ctx.stroke();ctx.setLineDash([]);
+ if(Number.isFinite(probeY)&&probeY>=lo&&probeY<=hi){ctx.beginPath();ctx.arc(xdx(xProbe),ypx(probeY),5,0,Math.PI*2);ctx.fillStyle='#355bd4';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()}
+ ctx.strokeStyle='#8fa4c5';ctx.lineWidth=1.2;ctx.strokeRect(DL(),DT(),DR()-DL(),DB()-DT());
+ ctx.fillStyle='#61728f';ctx.textAlign='center';ctx.font='13px Segoe UI, Arial';ctx.fillText('Position x',.5*(DL()+DR()),density.height-7);
+ ctx.save();ctx.translate(13,.5*(DT()+DB()));ctx.rotate(-Math.PI/2);ctx.fillText(meta.axis,0,0);ctx.restore();
+ $('momentTitle').textContent=meta.title;$('momentBadge').textContent=meta.badge;
+ $('momentSubtitle').textContent='Comparison of the initial and evolved moment derived from f(x,v,t).';
+ $('momentFormula').textContent=meta.formula;$('momentKeypoint').innerHTML='<b>Key point:</b> '+(collisionsOn()?'Collisions change the shape of f at fixed position while the velocity moments remain the natural macroscopic observables. '+meta.tip:meta.tip);
+ $('legendInitial').textContent=meta.axis.replace('(x,t)','(x,0)');$('legendCurrent').textContent=meta.axis;
+ $('probeXValue').textContent=(xProbe>=0?'+':'')+xProbe.toFixed(2);
+ $('probeXInline').textContent='x = '+xProbe.toFixed(2);
+ function num(a){return Number.isFinite(a)?(Math.abs(a)<.001&&a!==0?a.toExponential(2):a.toFixed(3)):'—'}
+ $('probeInitial').textContent=num(m0[k]);$('probeCurrent').textContent=num(m[k]);$('probeDensity').textContent=num(m.n);
+ let note=gridOn()?'Moments are integrated numerically on a finite velocity grid, not estimated from sample dots. In the mirror model these moments describe parallel motion at fixed μ. Grid truncation can introduce errors. m = kB = 1.':'Moments are evaluated analytically from the full Gaussian mixture, not from sample dots. All quantities are dimensionless (m = kB = 1).';
+ if(k==='u'||k==='T')note+=' Values in extremely low-density regions are omitted from the plot.';
+ if(k==='T')note+=' With two beams, T₁D is a second-moment measure, not an equilibrium temperature.';
+ $('momentWarning').textContent=note;
+}
+
+function updateText(){
+ const p=params(),advanced=nonlinear(),cb=collisionsOn(),sel=collisionSelected(),nu=+$('collisionNu').value;
+ const L=mapLinear(p,currentTime),b=components[activeIndex],linSpread=Math.sqrt((L.A*b.sx)**2+(L.B*b.sv)**2+2*L.A*L.B*(b.rho||0)*b.sx*b.sv);
+ $('timeValue').textContent=fmt(currentTime);$('time').value=String(currentTime);
+ $('accelValue').textContent=(p.a>=0?'+':'')+fmt(p.a);$('omegaValue').textContent=fmt(p.w);
+ for(const [id,val] of [['mirrorBValue',p.Bmin],['mirrorRValue',p.R],['mirrorMuValue',p.mu],['waveEValue',p.E],['waveKValue',p.k],['waveVValue',p.vph]])$(id).textContent=val.toFixed(2);
+ $('speedValue').textContent=fmt(+$('speed').value,1)+'×';$('metricTime').textContent=fmt(currentTime);
+ $('metricJacobian').textContent='1.000';
+ const s=forward(tracer0.x,tracer0.v,currentTime,p),old=backward(s.x,s.v,currentTime,p);
+ $('metricTracer').textContent=fmt((cb?collisionSampleFrom(cGrid,s.x,s.v):fInitial(old.x,old.v))/fTracer0,3);
+ $('metricSpread').textContent=fmt(gridOn()?cSpread:linSpread,3);
+ $('metricTracerInfo').textContent=cb?'f(t)/f(0) · BGK changes f':'f(t)/f(0) along orbit';
+ $('metricJacobianInfo').textContent=cb?'Hamiltonian characteristics':'Area-preserving characteristics';
+ $('metricSpreadTitle').innerHTML=gridOn()?'Total spatial spread σ<sub>x</sub>':'Spatial spread σ<sub>x</sub>';
+ $('spreadNote').textContent=gridOn()?'all populations (numerical)':'selected Gaussian component';
+ $('accelGroup').classList.toggle('hidden',p.mode!=='electric');$('omegaGroup').classList.toggle('hidden',p.mode!=='harmonic');
+ $('mirrorGroup').classList.toggle('hidden',p.mode!=='mirror');$('waveGroup').classList.toggle('hidden',p.mode!=='wave');
+ $('fieldPreview').classList.toggle('hidden',!advanced);
+ if(p.mode==='mirror'){
+  const threshold=Math.sqrt(Math.max(0,2*p.mu*(p.R*p.Bmin-mirrorField(tracer0.x,p))));
+  const trapped=p.R>1.000001 && Math.abs(tracer0.v)<threshold-1e-8;
+  $('mirrorStatus').textContent='Traced particle: '+(trapped?'TRAPPED (mirror reflection)':'PASSING')+' · |v∥,0| = '+Math.abs(tracer0.v).toFixed(2)+' · critical |v∥| ≈ '+threshold.toFixed(2);
+ }
+ if(p.mode==='wave'){
+  const U=p.E/p.k,energy=.5*(tracer0.v-p.vph)**2+U*Math.cos(p.k*tracer0.x);
+  const trapped=p.E>1e-9&&energy<U-1e-9;
+  $('waveStatus').textContent='Traced particle: '+(trapped?'TRAPPED in the wave potential':'PASSING through the wave')+' · wave-frame energy = '+energy.toFixed(2);
+ }
+
+ let cap='';
+ if(p.mode==='free'){cap='Free streaming: particles retain their velocities. Different velocities shear the cloud, but each particle keeps its value of f.';$('modeBadge').textContent='Free streaming';$('forceFormula').textContent='a(x) = 0'}
+ else if(p.mode==='electric'){cap='Uniform electric field: all particles receive the same acceleration. The phase-space cloud translates and shears without changing its area.';$('modeBadge').textContent='Uniform electric field';$('forceFormula').textContent='a = qE/m = '+(p.a>=0?'+':'')+fmt(p.a)}
+ else if(p.mode==='harmonic'){cap='Electrostatic restoring force: the phase-space cloud rotates along harmonic trajectories. Phase-space area remains constant.';$('modeBadge').textContent='Harmonic potential';$('forceFormula').textContent='a(x) = −ω²x, ω = '+fmt(p.w)}
+ else if(p.mode==='mirror'){
+  cap='Magnetic mirror (guiding-centre, fixed μ): the parallel kinetic energy exchanges with perpendicular energy μB. Particles with insufficient parallel energy are reflected. The plotted v and T₁D are parallel quantities.';
+  $('modeBadge').textContent='Magnetic mirror';$('forceFormula').textContent='a∥(s) = −(μ/m) dB/ds; B(s) = Bmin [1 + (Rm−1)(1−e^(−s²/L²))]';
+ } else {
+  cap='Travelling electrostatic wave: the field accelerates particles according to their phase relative to the wave. At sufficient amplitude, particles may be trapped in the travelling potential.';
+  $('modeBadge').textContent='Travelling electrostatic wave';$('forceFormula').textContent='a(x,t) = (qE0/m) sin[k(x − vph t)]; ω = k vph';
+ }
+ $('dynamicsCaption').textContent=cap;
+ $('collisionStrength').classList.toggle('hidden',!sel);$('collisionNuValue').textContent=nu.toFixed(2);
+ $('collisionHint').innerHTML=cb?'BGK relaxation towards a local Gaussian at rate ν. Try <b>two beams</b> to see a clear effect. BGK conserves its local moments in the continuum model; the finite-grid scheme is approximate.':'No collision operator is acting; f is conserved along the Hamiltonian characteristics.';
+ $('collisionStatus').textContent=cb?'BGK ν = '+nu.toFixed(2)+'; νt = '+(nu*currentTime).toFixed(2)+'. Faint particles and dashed patch depict collisionless reference orbits.':advanced?'Collisionless field: f is evaluated by tracing the area-preserving characteristics backwards.':'Collisionless: exact analytic characteristics and f conserved along each orbit.';
+ $('modeBadge').textContent+=cb?' + BGK':'';
+ $('kineticEquation').textContent='∂f/∂t + v ∂f/∂x + a(x,t) ∂f/∂v = '+(cb?'C_BGK[f]':'0');
+ $('collisionEquation').classList.toggle('hidden',!cb);
+ $('collisionStep').innerHTML=cb?'<b>Collisional evolution:</b> df/dt = C_BGK[f]; f need not stay constant along trajectories.':'<b>Collisionless conservation:</b> df/dt = 0 along each characteristic (Liouville).';
+ let scope=cb?'BGK is a simplified 1D local Maxwellian-relaxation model, not the Coulomb/Landau operator. Numerical grid and finite boundaries give small errors.':advanced?'Nonlinear characteristics are traced with a reversible, area-preserving kick–drift–kick integrator. Moments use finite velocity quadrature. Fields are prescribed, not self-consistent.':'For the elementary collisionless forces, the characteristics are exact. Fields are prescribed, not self-consistent.';
+ if(p.mode==='mirror')scope+=' Magnetic mirroring is shown only for one conserved μ; BGK does not include pitch-angle scattering or collisional detrapping.';
+ $('kineticScope').innerHTML='<b>Model limits.</b> '+scope;
+ $('maxwellLegend').classList.toggle('hidden',!(cb&&$('showMaxwellian').checked));$('freeLegend').classList.toggle('hidden',!(cb&&$('showCollisionless').checked));
+ drawFieldPreview(p);
+}
+function drawFieldPreview(p){
+ if(!nonlinear())return;
+ const canvas=$('fieldCanvas'),ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,l=34,r=13,top=11,bottom=29;
+ ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+ const magnetic=p.mode==='mirror',vals=[];let vmin=Infinity,vmax=-Infinity;
+ for(let i=0;i<=200;i++){const x=-5.5+11*i/200,v=magnetic?mirrorField(x,p):p.E*Math.sin(p.k*(x-p.vph*currentTime)); vals.push(v);vmin=Math.min(vmin,v);vmax=Math.max(vmax,v)}
+ if(Math.abs(vmax-vmin)<1e-8){vmin-=.2;vmax+=.2}else{const gap=.12*(vmax-vmin);vmin-=gap;vmax+=gap}
+ const xp=i=>l+(W-l-r)*i/200,yp=y=>H-bottom-(y-vmin)/(vmax-vmin)*(H-bottom-top);
+ ctx.strokeStyle='#e4eaf4';ctx.lineWidth=1;
+ for(let k=0;k<=4;k++){const yy=top+(H-top-bottom)*k/4;ctx.beginPath();ctx.moveTo(l,yy);ctx.lineTo(W-r,yy);ctx.stroke()}
+ if(vmin<0&&vmax>0){ctx.beginPath();ctx.moveTo(l,yp(0));ctx.lineTo(W-r,yp(0));ctx.strokeStyle='#afbad0';ctx.stroke()}
+ ctx.strokeStyle=magnetic?'#2b75a4':'#c3702e';ctx.lineWidth=3;ctx.beginPath();vals.forEach((val,i)=>{if(i===0)ctx.moveTo(xp(i),yp(val));else ctx.lineTo(xp(i),yp(val))});ctx.stroke();
+ for(const k of [-5,0,5]){const xx=l+(k+5.5)/11*(W-l-r);ctx.fillStyle='#6b7f9c';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText(k,xx,H-9)}
+ ctx.fillText(magnetic?'s along field':'x',W-r-2,H-9);
+ $('fieldTitle').textContent=magnetic?'B(s) · magnetic field profile':'E(x,t) · instantaneous wave field';
+ $('fieldDetail').textContent=magnetic?'Bmin '+p.Bmin.toFixed(2)+' · Rm '+p.R.toFixed(1):'ω = '+(p.k*p.vph).toFixed(2);
+ $('fieldHelp').textContent=magnetic?'Smooth symmetric magnetic mirror; Bmax = Rm × Bmin is approached towards the ends. For Rm = 1 there is no mirror force.':'The curve moves as time increases at speed vph. For E0 = 0 there is no wave force.';
+}
+function drawVelocity(){
+ const ctx=vctx,W=velocityCanvas.width,H=velocityCanvas.height,l=56,r=20,t=17,b=43;
+ const xp=v=>l+(v-VMIN)/(VMAX-VMIN)*(W-l-r),x0=+$('probeX').value,p=params(),N=360;
+ let hi=0;const ini=[],cur=[],freeRef=[];for(let i=0;i<=N;i++){const v=VMIN+(VMAX-VMIN)*i/N,orig=backward(x0,v,currentTime,p),f0=fInitial(x0,v),fref=fInitial(orig.x,orig.v),ft=gridOn()&&currentTime>1e-10?collisionSampleFrom(cGrid,x0,v):fref;hi=Math.max(hi,f0,ft,collisionsOn()&&$('showCollisionless').checked?fref:0);ini.push(f0);cur.push(ft);freeRef.push(fref)}if(collisionsOn()&&$('showMaxwellian').checked){const mm=momentsAt(x0,currentTime,p),sg=Math.sqrt(Math.max(.0001,mm.T));hi=Math.max(hi,mm.n/(Math.sqrt(2*Math.PI)*sg))}hi=Math.max(1e-6,hi*1.14);
+ const yp=f=>H-b-(f/hi)*(H-b-t);
+ ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#e7edf7';ctx.lineWidth=1;
+ for(let i=0;i<=4;i++){const yy=yp(hi*i/4);ctx.beginPath();ctx.moveTo(l,yy);ctx.lineTo(W-r,yy);ctx.stroke();ctx.fillStyle='#7585a0';ctx.textAlign='right';ctx.font='11px Arial';ctx.fillText((hi*i/4).toFixed(2),l-8,yy+4)}
+ for(let v=-3;v<=3;v++){const xx=xp(v);ctx.beginPath();ctx.moveTo(xx,t);ctx.lineTo(xx,H-b);ctx.stroke();ctx.textAlign='center';ctx.fillText(v,xx,H-b+18)}
+ function stroke(a,col,dash,thick){ctx.beginPath();for(let i=0;i<=N;i++){const xx=xp(VMIN+(VMAX-VMIN)*i/N),yy=yp(a[i]);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)}ctx.lineWidth=thick;ctx.strokeStyle=col;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
+ stroke(ini,'#c27c34',[7,5],2.5);if(collisionsOn()&&$('showCollisionless').checked)stroke(freeRef,'#9459bd',[5,4],2.2);stroke(cur,'#355bd4',[],3);
+ if(collisionsOn()&&$('showMaxwellian').checked){const mm=momentsAt(x0,currentTime,p),sg=Math.sqrt(Math.max(.0001,mm.T));
+  const data=[];for(let i=0;i<=N;i++){const vv=VMIN+(VMAX-VMIN)*i/N;data.push(mm.n*gaussian(vv,mm.u,sg))}
+  stroke(data,'#0b9c8b',[5,5],2.3);
+ }
+ const m=momentsAt(x0,currentTime,p),m0=momentsAt(x0,0,p);
+ for(const [u,col] of [[m0.u,'#c27c34'],[m.u,'#355bd4']]){if(u<VMIN||u>VMAX)continue;ctx.beginPath();ctx.moveTo(xp(u),t);ctx.lineTo(xp(u),H-b);ctx.strokeStyle=col;ctx.setLineDash([3,6]);ctx.lineWidth=1.4;ctx.stroke();ctx.setLineDash([])}
+ ctx.strokeStyle='#8fa2bf';ctx.strokeRect(l,t,W-l-r,H-b-t);ctx.fillStyle='#61728f';ctx.textAlign='center';ctx.font='13px Arial';ctx.fillText('Velocity v',.5*(l+W-r),H-7);ctx.save();ctx.translate(14,(t+H-b)/2);ctx.rotate(-Math.PI/2);ctx.fillText('f(x₀, v, t)',0,0);ctx.restore();
+ function nonMaxwell(t,mm,reference=false){
+  if(mm.n<1e-8)return null;
+  let delta=0;
+  const NQ=250,dv=(CV1-CV0)/NQ,sig=Math.sqrt(Math.max(1e-8,mm.T));
+  for(let j=0;j<NQ;j++){
+   const vv=CV0+(j+.5)*dv;
+   const F=t<1e-10?fInitial(x0,vv):reference?fInitial(backward(x0,vv,t,p).x,backward(x0,vv,t,p).v):distributionAt(x0,vv,t,p);
+   delta+=dv*Math.abs(F-mm.n*gaussian(vv,mm.u,sig));
+  }
+  return delta/(2*mm.n);
+ }
+ const bgkIsOn=collisionsOn(),freeMoment=bgkIsOn?momentsAt(x0,currentTime,p,true):m;
+ const aFree=nonMaxwell(currentTime,freeMoment,true);
+ const aBgk=bgkIsOn?nonMaxwell(currentTime,m,false):null;
+ const formatA=a=>a===null?'—':a.toFixed(3);
+ $('nonMaxFree').textContent=formatA(aFree);
+ $('nonMaxBGK').textContent=formatA(aBgk);
+ $('nonMaxBGKInfo').textContent=bgkIsOn?'BGK ν = '+(+$('collisionNu').value).toFixed(1)+' · same x₀ and t':'Activate BGK to compare';
+ $('nonMaxHint').textContent=(!bgkIsOn)?'Activate BGK in the Collisions panel to compare A for the collisional and collisionless evolution.':(aFree===null||aBgk===null)?'The density at this probe is too small for a meaningful normalized comparison. Move the local probe towards the distribution.':'A = 0 denotes a local Maxwellian. Both values are computed at the same x₀ and t; they may coincide if the local distribution is already Gaussian.';
+ $('velocityProbeLabel').textContent='x₀ = '+x0.toFixed(2);$('velocityCaption').innerHTML='The integral over all velocities gives the local density: <strong>n(x₀,0) = '+m0.n.toFixed(3)+'</strong> and <strong>n(x₀,t) = '+m.n.toFixed(3)+'</strong>. Dashed vertical lines show the initial and current local mean velocities. Plot shows the finite window −3.6 ≤ v ≤ 3.6.'+(collisionsOn()?' BGK relaxes the shape of f, but does not prescribe its local mean velocity or temperature.':'');
+}
+function redraw(){ensureCollisions();updateText();drawPhase();drawDensity();drawVelocity();syncEditorStatus()}
+function syncEditorStatus(){$('editAtZero').textContent=currentTime>1e-8?'↺ Back to t = 0':'✓ Editing t = 0';phase.classList.toggle('editable',!!$('editF').checked&&currentTime<1e-8&&!playing)}
+function pause(){playing=false;$('play').textContent='▶ Play'}
+function seek(t){currentTime=Math.max(0,Math.min(TMAX,t));redraw()}
+$('play').addEventListener('click',()=>{if(playing){pause();return}if(currentTime>=TMAX-.005)currentTime=0;playing=true;lastFrame=0;$('play').textContent='Ⅱ Pause';requestAnimationFrame(tick)});
+function tick(now){if(!playing)return;if(lastFrame){currentTime=Math.min(TMAX,currentTime+Math.min(.30,(now-lastFrame)/1000)*.78*(+$('speed').value));redraw()}lastFrame=now;if(currentTime>=TMAX-.00001){pause();return}requestAnimationFrame(tick)}
+$('time').addEventListener('input',()=>{pause();seek(+$('time').value)});$('reset').addEventListener('click',()=>{pause();seek(0)});$('step').addEventListener('click',()=>{pause();seek(currentTime+.2)});
+$('forceMode').addEventListener('change',()=>{pause();invalidateCollisions();seek(0)});$('distribution').addEventListener('change',()=>{pause();setComponents();seek(0)});
+for(let id of ['accel','omega','speed','showParticles','showMarker','showPatch','moment','probeX','editF'])$(id).addEventListener('input',redraw);
+$('collisionMode').addEventListener('change',()=>{pause();invalidateCollisions();redraw()});
+ $('collisionNu').addEventListener('input',()=>{pause();invalidateCollisions();redraw()});
+ $('showMaxwellian').addEventListener('input',redraw);$('showCollisionless').addEventListener('input',redraw);
+ $('collisionDemo').addEventListener('click',()=>{
+   pause();$('forceMode').value='free';$('distribution').value='two';$('collisionMode').value='bgk';$('collisionNu').value='2.0';$('moment').value='T';$('probeX').value='-0.5';
+   setComponents();invalidateCollisions();seek(0);
+ });
+ for(const id of ['accel','omega','mirrorB','mirrorR','mirrorMu','waveE','waveK','waveV'])$(id).addEventListener('input',()=>{pause();invalidateCollisions();redraw()});
+ $('mirrorDemo').addEventListener('click',()=>{
+  pause();$('forceMode').value='mirror';$('collisionMode').value='none';$('distribution').value='custom';
+  $('mirrorB').value='1.00';$('mirrorR').value='3.40';$('mirrorMu').value='0.85';
+  components=[{weight:1,mx:0,mv:1.45,sx:.36,sv:.25,rho:0}];activeIndex=0;buildSample();syncEditor();invalidateCollisions();seek(0);
+ });
+ $('waveDemo').addEventListener('click',()=>{
+  pause();$('forceMode').value='wave';$('collisionMode').value='none';$('distribution').value='custom';
+  $('waveE').value='1.65';$('waveK').value='1.30';$('waveV').value='0.80';
+  components=[{weight:1,mx:-.7,mv:.80,sx:.92,sv:.36,rho:0}];activeIndex=0;buildSample();syncEditor();invalidateCollisions();seek(0);
+ });
+ $('editAtZero').addEventListener('click',()=>{pause();seek(0)});
+$('activeComponent').addEventListener('change',()=>{activeIndex=+$('activeComponent').value;buildSample();syncEditor();redraw()});
+for(const [id,key] of [['spreadX','sx'],['spreadV','sv'],['tilt','rho'],['populationWeight','weight']])$(id).addEventListener('input',()=>{pause();components[activeIndex][key]=+$(''+id).value;edited()});
+$('addCloud').addEventListener('click',()=>{if(components.length>=3)return;pause();seek(0);const b=components[activeIndex];components.push({weight:.42,mx:Math.max(XMIN+.4,Math.min(XMAX-.4,b.mx+1.25)),mv:Math.max(VMIN+.4,Math.min(VMAX-.4,b.mv+.8)),sx:.62,sv:.4,rho:0});activeIndex=components.length-1;edited()});
+$('removeCloud').addEventListener('click',()=>{if(components.length<=1)return;pause();seek(0);components.splice(activeIndex,1);activeIndex=Math.min(activeIndex,components.length-1);edited()});
+function canvasPoint(e){const rect=phase.getBoundingClientRect();return{x:(e.clientX-rect.left)*phase.width/rect.width,y:(e.clientY-rect.top)*phase.height/rect.height}}
+function detectHandle(q){let nearest=null,best=24;for(let i=0;i<components.length;i++){const b=components[i],list=[{kind:'center',x:xpx(b.mx),y:vpy(b.mv)}];if(i===activeIndex){list.push({kind:'sx',x:xpx(b.mx+b.sx),y:vpy(b.mv)},{kind:'sv',x:xpx(b.mx),y:vpy(b.mv+b.sv)})}for(const h of list){const d=Math.hypot(q.x-h.x,q.y-h.y);if(d<best){best=d;nearest={i,kind:h.kind}}}}return nearest}
+phase.addEventListener('pointerdown',e=>{if(!$('editF').checked||currentTime>1e-8||playing)return;const q=canvasPoint(e),h=detectHandle(q);if(!h)return;activeIndex=h.i;dragAction=h.kind;dragStart={startX:q.x,startY:q.y,mx:components[h.i].mx,mv:components[h.i].mv};phase.classList.add('dragging');phase.setPointerCapture(e.pointerId);buildSample();syncEditor();redraw();e.preventDefault()});
+phase.addEventListener('pointermove',e=>{if(!dragAction)return;const q=canvasPoint(e),b=components[activeIndex];if(dragAction==='center'){b.mx=Math.max(XMIN+.2,Math.min(XMAX-.2,dragStart.mx+(q.x-dragStart.startX)*(XMAX-XMIN)/(PR()-PL())));b.mv=Math.max(VMIN+.2,Math.min(VMAX-.2,dragStart.mv-(q.y-dragStart.startY)*(VMAX-VMIN)/(PB()-PT())))}else if(dragAction==='sx'){b.sx=Math.max(.15,Math.min(2,invXpx(q.x)-b.mx))}else if(dragAction==='sv'){b.sv=Math.max(.12,Math.min(1.35,invVpy(q.y)-b.mv))}edited();e.preventDefault()});
+function endDrag(){dragAction=null;dragStart=null;phase.classList.remove('dragging')}
+phase.addEventListener('pointerup',endDrag);phase.addEventListener('pointercancel',endDrag);phase.addEventListener('lostpointercapture',endDrag);
+$('export').addEventListener('click',()=>{const out=document.createElement('canvas');out.width=1100;out.height=1320;const c=out.getContext('2d');c.fillStyle='#ffffff';c.fillRect(0,0,out.width,out.height);c.fillStyle='#172a55';c.font='bold 24px Arial';c.fillText('Kinetic Equation Explorer · Marco Gobbin',28,35);c.font='14px Arial';c.fillText('Phase-space distribution f(x,v,t) · t = '+fmt(currentTime)+(collisionsOn()?' · BGK ν = '+$('collisionNu').value:' · collisionless'),28,61);c.drawImage(phase,20,70,1060,505);c.font='14px Arial';c.fillText('Macroscopic moment: '+momentMeta[chosenMoment()].axis+' · '+momentMeta[chosenMoment()].formula,28,606);c.drawImage(density,70,619,920,355);c.font='14px Arial';c.fillText('Velocity distribution at the probe · f(x0,v,t)',28,1003);c.drawImage(velocityCanvas,70,1015,920,295);const a=document.createElement('a');a.download='Kinetic_Equation_Explorer_t_'+fmt(currentTime).replace('.','_')+'.png';a.href=out.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()});
+function adjustCanvasForScreen(){const narrow=window.matchMedia('(max-width:520px)').matches;const pw=narrow?700:1060,dw=narrow?720:920;let changed=false;if(phase.width!==pw){phase.width=pw;changed=true}if(density.width!==dw){density.width=dw;changed=true}if(velocityCanvas.width!==dw){velocityCanvas.width=dw;changed=true}if(changed)redraw()}
+window.addEventListener('resize',adjustCanvasForScreen,{passive:true});
+setComponents();adjustCanvasForScreen();redraw();
+})();
+</script>
+</body>
+</html>
